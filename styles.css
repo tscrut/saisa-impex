@@ -1,0 +1,250 @@
+body {
+  background-color: #2c3e50;
+  font-family: "Segoe UI", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+@page {
+  size: 80mm auto;
+  margin: 0;
+}
+
+.pump-casing {
+  background: #ecf0f1;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  display: flex;
+  gap: 20px;
+  border: 5px solid #34495e;
+  width: 800px;
+}
+
+/* Left Display Section */
+.display-section {
+  flex: 1;
+  background: #34495e;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.lcd-screen {
+  background: #95a5a6; /* LCD Backlight */
+  border: 4px inset #7f8c8d;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: right;
+  font-family: "Courier New", monospace; /* Digital font vibe */
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.lcd-label {
+  font-size: 0.8em;
+  color: #2c3e50;
+  font-weight: bold;
+  text-align: left;
+}
+
+.lcd-value {
+  font-size: 2.5em;
+  color: #000;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+/* Right Controls Section */
+.controls-section {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+}
+
+.fuel-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.fuel-btn {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+  opacity: 0.5;
+}
+
+.fuel-btn.active {
+  opacity: 1;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.btn-petrol {
+  background: #e74c3c;
+  color: white;
+}
+.btn-diesel {
+  background: #f39c12;
+  color: white;
+}
+
+/* Numeric Keypad */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.key {
+  background: #bdc3c7;
+  border: none;
+  padding: 15px;
+  font-size: 1.5em;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px #95a5a6;
+  transition: transform 0.1s;
+}
+
+.key:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 #95a5a6;
+}
+
+.key.clear {
+  background: #c0392b;
+  color: white;
+}
+.key.enter {
+  background: #27ae60;
+  color: white;
+}
+.key.mode-btn {
+  color: white;
+  opacity: 0.6;
+}
+.key.mode-btn.active {
+  opacity: 1;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  transform: scale(1.02);
+}
+
+.settings-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: 2px solid #7f8c8d;
+  color: #7f8c8d;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* Modal Styling */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.6); /* Black w/ opacity */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto; /* 5% from top and centered */
+  padding: 0;
+  border: 1px solid #888;
+  width: 900px;
+  height: 800px;
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.close-modal {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute;
+  right: 15px;
+  top: 5px;
+  z-index: 1010;
+  cursor: pointer;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#printableArea {
+  display: none;
+}
+
+/* Print Only Styles */
+/* Print Only Styles */
+@media print {
+  /* Hide everything by default */
+  body > * {
+    display: none !important;
+  }
+
+  /* Show only the printable area */
+  body > #printableArea {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+
+  /* Ensure content inside printable area is visible */
+  #printableArea * {
+    visibility: visible;
+  }
+
+  /* Reset body styles for print */
+  body {
+    background: white;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    display: block;
+  }
+
+  /* Ensure receipt styling applies */
+  .receipt-paper {
+    width: 80mm;
+    margin: 0 auto;
+    font-family: "Courier New", monospace;
+    color: black;
+    padding: 5px;
+    /* Optional: Add a border for visual check if needed, or remove for cleaner look */
+  }
+}

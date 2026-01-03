@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Receipt Designer & Settings</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        padding: 20px;
+        background: #e0e0e0;
+      }
+      .container {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      h2 {
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+        color: #333;
+      }
+      .row {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      label {
+        font-weight: 600;
+        color: #555;
+      }
+      input[type="number"] {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1.1em;
+        width: 120px;
+      }
+
+      button {
+        padding: 10px 15px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: 0.2s;
+      }
+      button:hover {
+        opacity: 0.8;
+        transform: translateY(-1px);
+      }
+      .btn-save {
+        background: #27ae60;
+        color: white;
+        width: 100%;
+        font-size: 1em;
+        padding: 12px;
+      }
+
+      /* Editor Styles */
+      #editor {
+        border: 1px solid #ddd;
+        min-height: 350px;
+        width: 80mm; /* Simulate receipt width */
+        padding: 15px;
+        background: white;
+        margin: 15px auto;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+      .toolbar {
+        background: #f9f9f9;
+        padding: 10px;
+        border-radius: 5px;
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .toolbar button {
+        background: white;
+        border: 1px solid #ccc;
+        color: #333;
+        padding: 5px 10px;
+      }
+      .toolbar button:hover {
+        background: #eee;
+      }
+
+      .variables {
+        margin-top: 20px;
+        font-size: 0.9em;
+        color: #666;
+        text-align: center;
+      }
+      .tag {
+        background: #e8f0fe;
+        color: #1a73e8;
+        padding: 4px 8px;
+        border: 1px solid #d2e3fc;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 0 2px;
+        display: inline-block;
+        font-family: monospace;
+      }
+      .tag:hover {
+        background: #d2e3fc;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Configuration</h2>
+      <div class="row">
+        <label>Petrol Price (Rs./L)</label>
+        <input type="number" id="pricePetrol" step="0.01" />
+      </div>
+
+      <div
+        class="row"
+        style="flex-direction: column; align-items: stretch; gap: 8px"
+      >
+        <label>Custom CSS (for print and preview)</label>
+        <textarea
+          id="customCss"
+          style="
+            width: 100%;
+            height: 160px;
+            font-family: monospace;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+          "
+          placeholder="e.g. body { font-size: 12px; } .receipt-title { text-align:center; }"
+        ></textarea>
+      </div>
+      <div class="row">
+        <label>Diesel Price (Rs./L)</label>
+        <input type="number" id="priceDiesel" step="0.01" />
+      </div>
+      <button class="btn-save" onclick="saveConfig()">Save Prices</button>
+
+      <hr />
+
+      <h2>Receipt Design (80mm)</h2>
+      <div class="toolbar">
+        <button onclick="document.execCommand('bold')"><b>B</b></button>
+        <button onclick="document.execCommand('italic')"><i>I</i></button>
+        <button onclick="document.execCommand('justifyLeft')">Left</button>
+        <button onclick="document.execCommand('justifyCenter')">Center</button>
+        <button onclick="document.execCommand('justifyRight')">Right</button>
+        <button onclick="document.execCommand('fontSize', false, '5')">
+          Big Text
+        </button>
+        <button onclick="document.execCommand('fontSize', false, '3')">
+          Normal
+        </button>
+      </div>
+
+      <div id="editor" contenteditable="true">
+        <div style="text-align: center">
+          <b>FUEL STATION INC.</b><br />
+          123 Main Street<br />
+          --------------------------------
+        </div>
+        <div>
+          Date: {{date}}<br /><br />
+          Fuel: <b>{{type}}</b><br />
+          Price/L: {{price}}<br />
+          Volume: {{liters}} L<br />
+          --------------------------------<br />
+          <span style="font-size: x-large">TOTAL: Rs.{{total}}</span><br />
+          --------------------------------<br />
+        </div>
+        <div style="text-align: center">Thank You!</div>
+      </div>
+
+      <div class="variables">
+        Available Tags (Click to copy):
+        <span class="tag" onclick="copyTag('{{type}}')">{{type}}</span>
+        <span class="tag" onclick="copyTag('{{price}}')">{{price}}</span>
+        <span class="tag" onclick="copyTag('{{liters}}')">{{liters}}</span>
+        <span class="tag" onclick="copyTag('{{total}}')">{{total}}</span>
+        <span class="tag" onclick="copyTag('{{date}}')">{{date}}</span>
+        <span class="tag" onclick="copyTag('{{paymentMethod}}')"
+          >{{paymentMethod}}</span
+        >
+        <span class="tag" onclick="copyTag('{{paid}}')">{{paid}}</span>
+        <span class="tag" onclick="copyTag('{{change}}')">{{change}}</span>
+      </div>
+      <br />
+      <button
+        class="btn-save"
+        onclick="saveTemplate()"
+        style="background: #2980b9"
+      >
+        Save Design
+      </button>
+    </div>
+
+    <script>
+      // Load existing
+      let config = JSON.parse(localStorage.getItem("fuelConfig")) || {
+        pricePetrol: 1.5,
+        priceDiesel: 1.4,
+      };
+      document.getElementById("pricePetrol").value = config.pricePetrol;
+      document.getElementById("priceDiesel").value = config.priceDiesel;
+
+      let template = localStorage.getItem("receiptTemplate");
+      if (template) document.getElementById("editor").innerHTML = template;
+      const savedCss = localStorage.getItem("receiptCss") || "";
+      document.getElementById("customCss").value = savedCss;
+
+      function saveConfig() {
+        const newConfig = {
+          pricePetrol: parseFloat(document.getElementById("pricePetrol").value),
+          priceDiesel: parseFloat(document.getElementById("priceDiesel").value),
+        };
+        localStorage.setItem("fuelConfig", JSON.stringify(newConfig));
+        alert("Prices Saved!");
+      }
+
+      function saveTemplate() {
+        localStorage.setItem(
+          "receiptTemplate",
+          document.getElementById("editor").innerHTML
+        );
+        localStorage.setItem(
+          "receiptCss",
+          document.getElementById("customCss").value
+        );
+        alert("Template & CSS Saved!");
+      }
+
+      function copyTag(tag) {
+        navigator.clipboard.writeText(tag);
+      }
+    </script>
+  </body>
+</html>
