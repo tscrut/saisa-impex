@@ -20,6 +20,7 @@ let displayLiters;
 let displayPrice;
 let configModal;
 let editorFrame;
+let billNumber;
 
 function selectFuel(type) {
   currentFuel = type;
@@ -42,6 +43,11 @@ function pressKey(key) {
     currentInput += key;
   }
   calculate();
+}
+
+//generate bill number based on current date in linux timestamp format
+function generateBillNumber() {
+  return Math.floor(Date.now() / 1000);
 }
 
 function setInputMode(mode) {
@@ -93,7 +99,7 @@ function printReceipt() {
   let template = localStorage.getItem("receiptTemplate");
   if (!template) {
     template =
-      "<h2 style='text-align:center'>FUEL STATION</h2><br>Type: {{type}}<br>Price: {{price}}<br>Liters: {{liters}}<br><b>Total: {{total}}</b><br>Payment: {{paymentMethod}}<br>Paid: {{paid}}<br>Change: {{change}}";
+      "<h1 style='text-align:center'>Saisa Trading Impex</h1><br><br>Type: {{type}}<br>Price: {{price}}<br>Liters: {{liters}}<br><b>Total: {{total}}</b><br>Payment: {{paymentMethod}}<br>Paid: {{paid}}<br>Change: {{change}}";
   }
 
   let finalHtml = template
@@ -105,7 +111,7 @@ function printReceipt() {
     .replace(
       /{{paymentMethod}}/g,
       (document.getElementById("paymentMethod")?.value || "").toString()
-    )
+    ).replace(/{{billNumber}}/g, generateBillNumber().toString())
     .replace(
       /{{paid}}/g,
       (document.getElementById("paidAmount")?.value || "").toString()
@@ -186,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const changeAmount = document.getElementById("changeAmount");
 
   function updatePaymentUI() {
-    if (paymentMethod.value === "cash") {
+    if (paymentMethod.value === "Cash") {
       paidAmount.style.display = "inline";
       changeAmount.style.display = "inline";
     } else {
@@ -203,10 +209,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const total = parseFloat(displayAmount.innerText) || 0;
     const paid = parseFloat(paidAmount.value) || 0;
     const change = paid - total;
-    if (paymentMethod.value === "cash" && paidAmount.value) {
+    if (paymentMethod.value === "Cash" && paidAmount.value) {
       changeAmount.textContent = `Change: ${change.toFixed(2)}`;
     } else {
-      changeAmount.textContent = "";
+      changeAmount.textContent = "-";
     }
   }
 

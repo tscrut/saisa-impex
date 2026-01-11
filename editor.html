@@ -117,7 +117,10 @@
         <label>Petrol Price (Rs./L)</label>
         <input type="number" id="pricePetrol" step="0.01" />
       </div>
-
+      <div class="row">
+        <label>Diesel Price (Rs./L)</label>
+        <input type="number" id="priceDiesel" step="0.01" />
+      </div>
       <div
         class="row"
         style="flex-direction: column; align-items: stretch; gap: 8px"
@@ -135,10 +138,6 @@
           "
           placeholder="e.g. body { font-size: 12px; } .receipt-title { text-align:center; }"
         ></textarea>
-      </div>
-      <div class="row">
-        <label>Diesel Price (Rs./L)</label>
-        <input type="number" id="priceDiesel" step="0.01" />
       </div>
       <button class="btn-save" onclick="saveConfig()">Save Prices</button>
 
@@ -161,18 +160,23 @@
 
       <div id="editor" contenteditable="true">
         <div style="text-align: center">
-          <b>FUEL STATION INC.</b><br />
-          123 Main Street<br />
-          --------------------------------
+          <span style="font-size: x-large">Saisa Trading Impex</span><br />
+          <span style="font-size: large">Dahachowk-01, Kathmandu</span><br />
+          <span style="font-size: large">VAT No: 606053952</span><br />
+          <span style="font-size: large">Bill No: {{billNumber}}</span><br />
+          <hr class="hr" />
         </div>
         <div>
           Date: {{date}}<br /><br />
           Fuel: <b>{{type}}</b><br />
           Price/L: {{price}}<br />
           Volume: {{liters}} L<br />
-          --------------------------------<br />
+          <hr class="hr" />
           <span style="font-size: x-large">TOTAL: Rs.{{total}}</span><br />
-          --------------------------------<br />
+          <hr class="hr" />
+          Payment: {{paymentMethod}}<br />
+          Paid: {{paid}}<br />  
+          Change: {{change}}<br />
         </div>
         <div style="text-align: center">Thank You!</div>
       </div>
@@ -189,6 +193,7 @@
         >
         <span class="tag" onclick="copyTag('{{paid}}')">{{paid}}</span>
         <span class="tag" onclick="copyTag('{{change}}')">{{change}}</span>
+        <span class="tag" onclick="copyTag('{{billNumber}}')">{{billNumber}}</span>
       </div>
       <br />
       <button
@@ -203,8 +208,8 @@
     <script>
       // Load existing
       let config = JSON.parse(localStorage.getItem("fuelConfig")) || {
-        pricePetrol: 1.5,
-        priceDiesel: 1.4,
+        pricePetrol: 160,
+        priceDiesel: 150,
       };
       document.getElementById("pricePetrol").value = config.pricePetrol;
       document.getElementById("priceDiesel").value = config.priceDiesel;
@@ -232,7 +237,7 @@
           "receiptCss",
           document.getElementById("customCss").value
         );
-        alert("Template & CSS Saved!");
+        alert("Template Saved!");
       }
 
       function copyTag(tag) {
